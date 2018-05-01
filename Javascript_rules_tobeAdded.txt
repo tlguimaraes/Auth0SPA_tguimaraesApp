@@ -1,0 +1,40 @@
+Java Script Rules to be added on Auth0 dashboard
+
+
+addpersistentcontentuser
+
+
+function (user, context, callback) {
+  user.user_metadata = user.user_metadata || {};
+  if(user.email==="tguimaraes@tguimaraes.com"){
+     user.user_metadata.jobtitle = user.user_metadata.jobtitle || 'admin';
+  }else{
+    user.user_metadata.jobtitle = user.user_metadata.jobtitle || 'end-user';
+  }
+  context.idToken['http://localhost:3000/portal/jobtitle'] = user.user_metadata.jobtitle;
+
+
+  auth0.users.updateUserMetadata(user.user_id, user.user_metadata)
+    .then(function(){
+        callback(null, user, context);
+    })
+    .catch(function(err){
+        callback(err);
+    });
+}
+
+
+and
+
+UserMetadata
+
+function (user, context, callback) {
+  var namespace = 'http://localhost:3000/portal/';
+  context.idToken[namespace + 'app_metadata'] = user.app_metadata;
+  context.idToken[namespace + 'user_metadata'] = user.user_metadata;
+  //context.accessToken['app_metadata'] = user.app_metadata;
+  //context.accessToken['user_metadata'] = user.user_metadata;
+  context.idToken['app_metadata'] = user.app_metadata;
+  context.idToken['user_metadata'] = user.user_metadata;
+  callback(null, user, context);
+}

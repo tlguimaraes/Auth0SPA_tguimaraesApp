@@ -13,7 +13,7 @@ window.addEventListener('load', function() {
     scope: 'openid',
     leeway: 60
   });
-
+   
   var loginStatus = document.querySelector('.container h4');
   var loginView = document.getElementById('login-view');
   var homeView = document.getElementById('home-view');
@@ -112,6 +112,26 @@ window.addEventListener('load', function() {
   handleAuthentication();
 });
 
+//That will clean the key before the browser window/tab is open
+window.onbeforeload = function() {
+  localStorage.setItem('access_token', '');
+  localStorage.setItem('id_token', '');
+  localStorage.setItem('expires_at', '');
+  //prompts you to confirm the close window/tab action.
+  //return '';
+};
+
+//That will delete the key before the browser window/tab is closed.
+window.onbeforeunload = function() {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('id_token');
+  localStorage.removeItem('expires_at');
+  //prompts you to confirm the close window/tab action.
+  //return '';
+};
+
+
+
 //Caching access_token:
 function AddCacheStorage() {
     window.fetch('#/home', {mode: 'no-cors'}).then(function(response) {
@@ -127,8 +147,8 @@ function AddCacheStorage() {
 
 var userProfile;
 var webAuth = new auth0.WebAuth({
-    domain:       'tguimaraes.auth0.com',
-    clientID:     '5n-1FcKa4XJ1NT2qVPlLw_0mSJ0xaiaR'
+  domain: '[DOMAIN]',
+  clientID: '[CLIENT-ID]'
   });
 
 function getProfile() {
